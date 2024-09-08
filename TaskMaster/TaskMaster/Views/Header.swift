@@ -1,21 +1,11 @@
 //
-//  ContentView.swift
+//  Header.swift
 //  TaskMaster
 //
-//  Created by Jared Wilson on 8/17/24.
+//  Created by Jared Wilson on 9/5/24.
 //
 
 import SwiftUI
-
-// Main view
-struct ContentView: View {
-    var body: some View {
-        VStack {
-            Header()
-            Spacer()
-        }
-    }
-}
 
 // Welcoming header
 struct Header: View {
@@ -29,10 +19,6 @@ struct Header: View {
     }
 }
 
-struct Preview: PreviewProvider {
-    static var previews: some View {
-        Group {
-            ContentView()
-        }
-    }
+#Preview {
+    Header()
 }

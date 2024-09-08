@@ -11,6 +11,5 @@ Overview:
     progress/stress and visualizing data gathered
 
 Features:
-
-Installation Instructions:
+    * 
     
