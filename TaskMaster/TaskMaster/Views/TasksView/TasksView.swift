@@ -5,7 +5,6 @@
 //  Created by Jared Wilson on 9/5/24.
 //
 
-import SwiftUI
 
 /*
  - The task view takes whatever tasks that you have in that calendar day and puts them in
@@ -14,37 +13,132 @@ import SwiftUI
  - Has a button to create a task
  */
 
+import SwiftUI
+
 struct TasksView: View {
-    var body: some View {
-        VStack{
-            
-            TasksHeader()
-                .padding(.top, 40)
+    @State private var tasks: [TaskItem] = []
+    @StateObject private var appState = AppState.shared
+    @State private var refreshTrigger = false
+    let networkingManager = NetworkingManager()
     
-            // Button to make new tasks. Maybe sends you to task creation view?
-            Button{
-                createTask()
-            } label: {Text("Create Tasks")}
-            Spacer()
+    var body: some View {
+        NavigationStack {
+            VStack {
+                TasksHeader()
+                    .padding(.top, 50)
+                AddTaskButton(refreshTrigger: $refreshTrigger, onRefresh: loadTasks)
+                
+                ScrollView {
+                    LazyVStack {
+                        ForEach(tasks) { task in
+                            HStack {
+                                Button(action: {
+                                    toggleTaskCompletion(task: task)
+                                }) {
+                                    Image(systemName: task.completedAt != nil ? "checkmark.circle.fill" : "circle")
+                                        .foregroundColor(task.completedAt != nil ? .green : .gray)
+                                        .font(.system(size: 24))
+                                }
+                                .padding(.leading, 8)
+                                NavigationLink(destination: SubtasksView(task: task)) {
+                                    HStack {
+                                        Text(task.taskName)
+                                            .font(.system(size: 30, weight: .semibold))
+                                            .multilineTextAlignment(.leading)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .padding(.leading, 8)
+                                            .foregroundColor(.black)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(.gray)
+                                            .font(.system(size: 30))
+                                            .padding(.trailing, 8)
+                                    }
+                                    .padding(.vertical, 10)
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+                .onAppear {
+                    loadTasks()
+                }
+                
+                Spacer()
+            }
+            .edgesIgnoringSafeArea(.top)
         }
-        .edgesIgnoringSafeArea(.top)
     }
+    
+    func toggleTaskCompletion (task: TaskItem) {
+        let url = "http://localhost:8080/api/tasks/\(task.taskID)/toggle"
+        
+        // Get current date in ISO8601 format
+        let dateFormatter = ISO8601DateFormatter()
+        let currentDate = dateFormatter.string(from: Date())
+        
+        let jsonBody: [String: Any] = [
+            "completedAt": task.completedAt == nil ? currentDate : NSNull()
+        ]
+        
+        networkingManager.putRequest(url: url, json: jsonBody) { response in
+            if response != nil {
+                // Refresh the tasks list to show updated state
+                loadTasks()
+            }
+        }
+        
+    }
+    
+    func loadTasks() {
+        let url = "http://localhost:8080/api/tasks"
+        
+        networkingManager.getRequest(url: url) { jsonResponse in
+            guard let response = jsonResponse as? [[String: Any]] else {
+                print("Invalid data format")
+                return
+            }
+            
+            DispatchQueue.main.async {
+                self.tasks = response.compactMap { dict in
+                    let userDict = dict["user"] as! [String: Any]
+                    let username = userDict["username"] as! String
+                    let taskID = dict["taskID"] as! Int
+                    let taskName = dict["taskName"] as! String
+                    let taskDeadline = dict["taskDeadline"] as! String
+                    let taskStatus = dict["taskStatus"] as! String
+                    let createdAt = dict["createdAt"] as! String
+                    let completedAt = dict["completedAt"] as? String
+                    
+                    if (username == appState.currentUsername) {
+                        return TaskItem(
+                            taskID: taskID,
+                            taskName: taskName,
+                            taskDeadline: taskDeadline,
+                            taskStatus: taskStatus,
+                            createdAt: createdAt,
+                            completedAt: completedAt
+                        )
+                    } else {
+                        return nil;
+                    }
+                }
+                
+            }
+        }
+    }
+    
 }
 
 
-
-/* 
- Function to create a task.
- 
- I don't know whether I want it to return a new object of task item or just create it in the function
- most likely just create it in the method
- */
-func createTask(){
-    print("success")
-}
 
 struct TasksView_Previews: PreviewProvider {
     static var previews: some View {
-        TasksView()
+        let previewAppState = AppState.shared
+        previewAppState.currentUsername = "user1813"
+        
+        return TasksView()
+            .environmentObject(previewAppState)
     }
 }

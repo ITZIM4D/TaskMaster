@@ -8,11 +8,38 @@
 import SwiftUI
 
 struct AddTaskButton: View {
+    @State private var showingAddTaskView = false
+    @Binding var refreshTrigger: Bool
+    var onRefresh: () -> Void
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack {
+            Text("Add Task")
+                .font(.system(size: 30))
+                .frame(width: 125, alignment: .center)
+            
+            Button(action: {
+                showingAddTaskView = true
+            }) {
+                Image(systemName: "plus")
+                    .resizable()
+                    .frame(width: 30, height: 30)
+            }
+            .padding(.leading, 5)
+            .sheet(isPresented: $showingAddTaskView, onDismiss: {
+                refreshTrigger.toggle()
+                onRefresh()
+            }) {
+                AddTaskView()
+            }
+        }
     }
 }
 
-#Preview {
-    AddTaskButton()
+struct AddTaskButton_Previews: PreviewProvider {
+    static var previews: some View {
+        AddTaskButton(refreshTrigger: .constant(false), onRefresh: {})
+    }
 }
+
+

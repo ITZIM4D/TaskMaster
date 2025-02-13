@@ -11,5 +11,11 @@ Overview:
     progress/stress and visualizing data gathered
 
 Features:
-    * 
+    * You can create tasks and they will be displayed in the task list
+
+Attributions:
+    Icons by:
+        KiranShastry from flaticon.com
+        freepik from flaticon.com  
+        HAJICON from flaticon.com
     

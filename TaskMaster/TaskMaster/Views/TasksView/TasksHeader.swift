@@ -20,6 +20,7 @@ struct TasksHeader: View {
                 .font(.largeTitle)
                 .padding()
                 .frame(maxWidth: .infinity)
+                .frame(height: 80)
                 .multilineTextAlignment(.center)
         }
     }

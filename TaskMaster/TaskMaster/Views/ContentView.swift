@@ -9,27 +9,27 @@ import SwiftUI
 
 // Main view
 struct ContentView: View {
-    
     @State var selectedTab: Tabs = .tasks
     
     var body: some View {
         VStack {
             // Make a switch statement for tabs
             switch selectedTab {
-                case .tasks:
-                    TasksView()
-                case .stressCheck:
-                    StressCheckView()
-                case .progress:
-                    ProgressView()
-                case .profile:
-                    ProfileView()
-                        }
+            case .tasks:
+                TasksView()
+            case .feedback:
+                FeedbackView()
+            case .progress:
+                ProgressView()
+            case .settings:
+                SettingsView()
+            }
             Spacer()
             Spacer()
             TabBar(selectedTab: $selectedTab)
                 .offset(y: 25)
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 

@@ -9,9 +9,9 @@ import SwiftUI
 
 enum Tabs: Int {
     case tasks = 0
-    case stressCheck = 1
+    case feedback = 1
     case progress = 2
-    case profile = 3
+    case settings = 3
 }
 
 struct TabBar: View {
@@ -47,20 +47,21 @@ struct TabBar: View {
                             }
                         }
                         
-                        // Button to switch to StressCheck
+                        // Button to switch to feedback
                         Button {
-                            // Set the selected tab to Stress check
-                            selectedTab = .stressCheck
+                            // Set the selected tab to feedback
+                            selectedTab = .feedback
                         } label: {
                             VStack(alignment: .center, spacing: 4) {
-                                Image("stress-relief")
+                                Image(systemName: "bubble.left.and.bubble.right")
                                     .resizable()
                                     .frame(width: 32, height: 32)
-                                Text("Stress Check")
+                                    .foregroundColor(.black)
+                                Text("Feedback")
                                     .font(.system(size: 18, weight: .medium, design: .rounded))
                                     .foregroundColor(.black)
                                 
-                                if (selectedTab == .stressCheck){
+                                if (selectedTab == .feedback){
                                     Rectangle()
                                         .foregroundColor(.blue)
                                         .frame(width: 40, height: 3)
@@ -90,21 +91,21 @@ struct TabBar: View {
                             }
                         }
                         
-                        // Button to switch to Profile
+                        // Button to switch to Settings
                         Button {
-                            // Set the selected tab to profile
-                            selectedTab = .profile
+                            // Set the selected tab to settings
+                            selectedTab = .settings
                             
                         } label: {
                             VStack(alignment: .center, spacing: 4) {
-                                Image("user")
+                                Image("settings")
                                     .resizable()
                                     .frame(width: 32, height: 32)
-                                Text("Profile")
+                                Text("Settings")
                                     .font(.system(size: 18, weight: .medium, design: .rounded))
                                     .foregroundColor(.black)
                                 
-                                if (selectedTab == .profile){
+                                if (selectedTab == .settings){
                                     Rectangle()
                                         .foregroundColor(.blue)
                                         .frame(width: 40, height: 3)

@@ -8,10 +8,25 @@
 import SwiftUI
 
 struct ProgressView: View {
+    let networkingManager = NetworkingManager()
+    @StateObject private var appState = AppState.shared
+    @State private var userID = 0
+    @State private var completedTasks = 0
+    @State private var totalTasks = 0
+    @State private var pendingTasks = 0
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            ProgressHeader()
+            ProgressGraphView()
+            Spacer()
+        }
+        
     }
-}
+        
+        
+
+    }
 
 struct ProgressView_Previews: PreviewProvider {
     static var previews: some View {
