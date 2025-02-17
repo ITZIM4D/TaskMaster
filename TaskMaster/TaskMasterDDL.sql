@@ -53,5 +53,6 @@ CREATE TABLE Feedback (
     difficulty INT,
     timeAccuracy ENUM("Less", "Expected", "More"),
     challenges varchar(255),
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    reccomendation varchar(255) DEFAULT NULL
 );
