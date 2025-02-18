@@ -2,6 +2,7 @@ package com.TaskMaster.controller;
 
 import com.TaskMaster.model.Feedback;
 import com.TaskMaster.repository.FeedbackRepository;
+import com.TaskMaster.service.FeedbackAnalysisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.*;
@@ -15,6 +16,9 @@ public class FeedbackController {
     @Autowired
     private FeedbackRepository feedbackRepository;
 
+    @Autowired
+    private FeedbackAnalysisService feedbackAnalysisService;
+
     @GetMapping
     public List<Feedback> getAllFeedback() {
         return feedbackRepository.findAll();
@@ -22,8 +26,22 @@ public class FeedbackController {
 
     @PostMapping
     public Feedback createFeedback(@RequestBody Feedback feedback) {
-        System.out.println("Received feedback: " + feedback);
-        return feedbackRepository.save(feedback);
+        Feedback savedFeedback = feedbackRepository.save(feedback);
+
+        try {
+            String recommendation = feedbackAnalysisService.analyzeFeedback(
+                feedback.getChallenges(),
+                feedback.getDifficulty(),
+                feedback.getFeedbackID()
+            );
+
+            savedFeedback.setReccomendation(recommendation);
+            savedFeedback = feedbackRepository.save(savedFeedback);
+            return feedbackRepository.findById(savedFeedback.getFeedbackID()).orElse(savedFeedback);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return savedFeedback;
+        }
     }
 
     @GetMapping("/{id}")

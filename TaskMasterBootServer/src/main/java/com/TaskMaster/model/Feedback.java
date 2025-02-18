@@ -27,6 +27,9 @@ public class Feedback {
     @Column(name = "challenges")
     private String challenges;
 
+    @Column(name = "reccomendation")
+    private String reccomendation;
+
     @Column(name = "createdAt", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -92,5 +95,13 @@ public class Feedback {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getReccomendation() {
+        return reccomendation;
+    }
+
+    public void setReccomendation(String reccomendation) {
+        this.reccomendation = reccomendation;
     }
 }

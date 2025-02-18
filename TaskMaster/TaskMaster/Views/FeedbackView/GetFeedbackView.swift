@@ -67,7 +67,7 @@ struct GetFeedbackView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
-                .padding()t
+                .padding()
             }
         }
     }

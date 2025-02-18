@@ -24,6 +24,8 @@ public class FeedbackAnalysisService {
                 "--feedback-id", String.valueOf(feedbackID)
             );
 
+
+
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
 

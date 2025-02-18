@@ -1,14 +1,20 @@
 import random
-from transformers import pipeline
 from huggingface_hub import HfFolder
-import mysql.connector
-from mysql.connector import Error
 import os
 import argparse
-
+from transformers import pipeline
+import warnings
+import transformers
 
 # Set Hugging Face authentication token
 HfFolder.save_token("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")
+
+# Suppress transformer warnings
+warnings.filterwarnings('ignore')
+transformers.logging.set_verbosity_error()
+
+# Suppress device messages
+os.environ["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"
 
 '''
 Steps to use:
@@ -215,138 +221,6 @@ class FeedbackAnalyser:
     def set_challenge_difficulty(self, new_challenge_difficulty):
       self.challenge_difficulty = new_challenge_difficulty
 
-
-
-
-
-
-feedback_dataset = [
-  {
-      "difficulty": 3,
-      "timeAccuracy": 0,
-      "challenges": "Struggled with breaking down the project into smaller manageable tasks. Lost focus midway."
-  },
-  {
-      "difficulty": 4,
-      "timeAccuracy": -1,
-      "challenges": "Time management was a major issue. Underestimated the complexity of the coding problem."
-  },
-  {
-      "difficulty": 2,
-      "timeAccuracy": 1,
-      "challenges": "Found the initial setup straightforward. Completed tasks faster than expected."
-  },
-  {
-      "difficulty": 5,
-      "timeAccuracy": -1,
-      "challenges": "Encountered multiple roadblocks in implementing complex algorithms. Needed extra research time."
-  },
-  {
-      "difficulty": 3,
-      "timeAccuracy": 0,
-      "challenges": "Debugging took longer than anticipated. Struggled with understanding error messages."
-  },
-  {
-      "difficulty": 1,
-      "timeAccuracy": 1,
-      "challenges": "Very simple task. Completed quickly with no significant obstacles."
-  },
-  {
-      "difficulty": 4,
-      "timeAccuracy": -1,
-      "challenges": "Learning new libraries and frameworks was time-consuming and challenging."
-  },
-  {
-      "difficulty": 2,
-      "timeAccuracy": 0,
-      "challenges": "Mild difficulties with syntax and code organization. Moderate learning curve."
-  },
-  {
-      "difficulty": 5,
-      "timeAccuracy": -1,
-      "challenges": "Complex system design required multiple iterations and extensive problem-solving."
-  },
-  {
-      "difficulty": 3,
-      "timeAccuracy": 1,
-      "challenges": "Good flow in task completion. Minor challenges with integration of components."
-  },
-  {
-      "difficulty": 4,
-      "timeAccuracy": 0,
-      "challenges": "Balancing multiple project requirements was mentally taxing."
-  },
-  {
-      "difficulty": 2,
-      "timeAccuracy": 1,
-      "challenges": "Clear instructions helped in quick task completion."
-  },
-  {
-      "difficulty": 5,
-      "timeAccuracy": -1,
-      "challenges": "Technical debt and legacy code made progress extremely slow."
-  },
-  {
-      "difficulty": 3,
-      "timeAccuracy": 0,
-      "challenges": "Collaboration with team members introduced some communication overhead."
-  },
-  {
-      "difficulty": 1,
-      "timeAccuracy": 1,
-      "challenges": "Routine task with no significant challenges."
-  },
-  {
-      "difficulty": 4,
-      "timeAccuracy": -1,
-      "challenges": "Continuous learning and adapting to new technologies was overwhelming."
-  },
-  {
-      "difficulty": 2,
-      "timeAccuracy": 0,
-      "challenges": "Minor productivity dips due to distractions."
-  },
-  {
-      "difficulty": 5,
-      "timeAccuracy": -1,
-      "challenges": "Solving performance bottlenecks required deep technical expertise."
-  },
-  {
-      "difficulty": 3,
-      "timeAccuracy": 1,
-      "challenges": "Good progress with incremental improvements."
-  },
-  {
-      "difficulty": 4,
-      "timeAccuracy": 0,
-      "challenges": "Balancing quality and speed was a constant challenge."
-  }
-]
-
-''' 
-Methods for sending data to sql table
-'''
-
-def create_connection():
-  try:
-    connection = mysql.connector.connect(
-      host = "localhost",
-      user = os.getenv("MYSQL_USER"),
-      password = os.getenv("MYSQL_PASSWORD"),
-      database = "TaskMaster"
-    )
-    return connection
-  except Error as e:
-    print(f"Error: {e}")
-    return None
-
-def sendToTable(connection, reccomendation, feedbackID):
-  cursor = connection.cursor()
-  cursor.execute("UPDATE feedback SET reccomendation = %s where feedbackID = %s;", (reccomendation, feedbackID))
-  connection.commit()
-  cursor.close()
-
-
 def main():
   # Argument parser for cmd line
   parser = argparse.ArgumentParser()
@@ -364,10 +238,7 @@ def main():
   FA.categorize_classification()
   reccomendation = FA.generate_reccomendations()
 
-  # Send reccomendation to feedback table in SQL
-  connection = create_connection()
-  feedbackID = 1
-  sendToTable(connection, reccomendation, feedbackID)
+  print(reccomendation)
 
 main()
 '''
