@@ -9,6 +9,7 @@ import SwiftUI
 
 struct FeedbackView: View {
     @State private var tasks: [TaskItem] = []
+    @State private var taskFeedback: [Int: (feedback: TaskFeedback, recommendation: String)] = [:]
     @StateObject private var appState = AppState.shared
     let networkingManager = NetworkingManager()
     
@@ -44,13 +45,41 @@ struct FeedbackView: View {
                 .cornerRadius(10)
                 .shadow(radius: 5)
                 .padding()
-                .onAppear {
-                    loadTasks()
+                
+                // Scrollable task feedback list
+                ScrollView {
+                    LazyVStack(spacing: 10) {
+                        ForEach(tasks) { task in
+                            if let feedbackInfo = taskFeedback[task.taskID] {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text(task.taskName)
+                                        .font(.system(size: 18, weight: .semibold))
+                                        .foregroundColor(.black)
+                                    Text(feedbackInfo.recommendation)
+                                        .font(.body)
+                                        .foregroundColor(.black)
+                                }
+                                .padding()
+                                .background(Color(.secondarySystemBackground))
+                                .cornerRadius(8)
+                            }
+                        }
+                    }
+                    .padding()
                 }
+                
+                .background(Color(.systemBackground))
+                .cornerRadius(10)
+                .shadow(radius: 5)
+                .padding()
+                
                 Spacer()
             }
         }
         .edgesIgnoringSafeArea(.top)
+        .onAppear() {
+            loadTasks()
+        }
     }
     
     func loadTasks() {
@@ -74,7 +103,7 @@ struct FeedbackView: View {
                     let completedAt = dict["completedAt"] as? String
                     
                     if (username == appState.currentUsername && taskStatus == "Completed") {
-                        return TaskItem(
+                        let task = TaskItem(
                             taskID: taskID,
                             taskName: taskName,
                             taskDeadline: taskDeadline,
@@ -82,6 +111,8 @@ struct FeedbackView: View {
                             createdAt: createdAt,
                             completedAt: completedAt
                         )
+                        loadFeedback(for: task)
+                        return task
                     } else {
                         return nil
                     }
@@ -90,6 +121,48 @@ struct FeedbackView: View {
             }
         }
     }
+    
+    func loadFeedback(for task: TaskItem) {
+        let url = "http://localhost:8080/api/feedback/task/\(task.taskID)"
+        
+        networkingManager.getRequest(url: url) { jsonResponse in
+            guard let feedbacks = jsonResponse as? [[String: Any]] else {
+                print("Invalid feedback data format")
+                return
+            }
+            
+            let sortedFeedbacks = feedbacks.sorted { feedback1, feedback2 in
+                guard let date1 = feedback1["createdAt"] as? String,
+                      let date2 = feedback2["createdAt"] as? String else {
+                    return false
+                }
+                return date1 > date2
+            }
+            
+            if let mostRecentFeedback = sortedFeedbacks.first {
+                DispatchQueue.main.async {
+                    let feedback = TaskFeedback (
+                        difficulty: mostRecentFeedback["difficulty"] as? Int ?? 0,
+                        timeAccuracy: mostRecentFeedback["timeAccuracy"] as? String ?? "Unknown",
+                        challenges: mostRecentFeedback["challenges"] as? String ?? "",
+                        createdAt: mostRecentFeedback["createdAt"] as? String ?? ""
+                    )
+                    let recommendation = mostRecentFeedback["reccomendation"] as? String ?? "No recommendation available"
+                    self.taskFeedback[task.taskID] = (feedback, recommendation)
+                }
+            }
+        }
+    }
+}
+
+
+
+
+struct TaskFeedback {
+    let difficulty: Int
+    let timeAccuracy: String
+    let challenges: String
+    let createdAt: String
 }
 
 struct FeedbackView_Previews: PreviewProvider {
@@ -97,3 +170,4 @@ struct FeedbackView_Previews: PreviewProvider {
         FeedbackView()
     }
 }
+

@@ -12,6 +12,7 @@ struct GetFeedbackView: View {
     @State private var difficulty: Int = 1
     @State private var timeAccuracy: String = "Expected"
     @State private var challenges: String = ""
+    @State private var reccomendation: String = ""
     @Environment(\.dismiss) private var dismiss
     @StateObject private var appState = AppState.shared
     let networkingManager = NetworkingManager()
@@ -85,7 +86,13 @@ struct GetFeedbackView: View {
         let url = "http://localhost:8080/api/feedback"
         
         networkingManager.postRequest(url: url, json: jsonPayload) { response in
-            print(response!)
+            if let response = response as? [String: Any] {
+                if let reccommendation = response["reccomendation"] as? String {
+                    DispatchQueue.main.async {
+                        self.reccomendation = reccommendation
+                    }
+                }
+            }
         }
         
     }

@@ -29,7 +29,7 @@ public class TaskBreakdownController {
             OpenAiService openAiService = new OpenAiService(OPENAI_API_KEY);
             
             ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
-                .model("gpt-3.5-turbo")  // You can also use "gpt-4"
+                .model("gpt-3.5-turbo") 
                 .messages(Arrays.asList(
                     new ChatMessage("system", "You are a helpful assistant."),
                     new ChatMessage("user", "Break down this task into 3-4 specific, actionable subtasks: " + request.getTaskDescription())

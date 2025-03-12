@@ -21,6 +21,25 @@ struct ProgressGraphView: View {
     let networkingManager = NetworkingManager()
     @StateObject private var appState = AppState.shared
     @State private var dailyTaskData: [DailyTaskData] = []
+    @State private var selectedTimeframe: Timeframe = .month
+    
+    enum Timeframe: String, CaseIterable, Identifiable {
+        case week = "Week"
+        case month = "Month"
+        case quarter = "3 Months"
+        case year = "Year"
+        
+        var id: String { self.rawValue }
+        
+        var daysToShow: Int {
+            switch self {
+            case .week: return 7
+            case .month: return 30
+            case .quarter: return 90
+            case .year: return 365
+            }
+        }
+    }
     
     var body: some View {
         VStack {
