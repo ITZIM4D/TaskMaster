@@ -1,10 +1,4 @@
-//
-//  NetworkingManager.swift
-//  TaskMaster
-//
 //  Manages all calls that will interact with the Spring Boot REST API
-//  Created by Jared Wilson on 10/6/24.
-//
 
 import Foundation
 
@@ -42,6 +36,7 @@ class NetworkingManager{
                 return
             }
             
+            // If the data cannot be  set to data
             guard let data = data else {
                 print("No data received")
                 completion(nil)

@@ -14,6 +14,16 @@ import java.util.List;
 @RequestMapping("/api/tasks")
 public class TaskController {
 
+    /**
+     * @Autowired
+     * 
+     * This injects a bean (instance) created from spring boot into the variable so it then 
+     * instantiates the variable without me needing to
+     * 
+     * very cool very nice
+     * 
+     */
+
     @Autowired
     private TaskRepository taskRepository;
 

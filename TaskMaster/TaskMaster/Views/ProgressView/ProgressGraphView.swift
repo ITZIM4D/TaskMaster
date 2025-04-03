@@ -43,37 +43,45 @@ struct ProgressGraphView: View {
     
     var body: some View {
         VStack {
-            // Task completion graph
+            Picker("Timeframe", selection: $selectedTimeframe) {
+                ForEach(Timeframe.allCases) { timeframe in
+                    Text(timeframe.rawValue).tag(timeframe)
+                }
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            .padding(.horizontal)
+            
             VStack(alignment: .leading) {
                 Text("Tasks Completed Per Day")
                     .font(.title2)
                     .fontWeight(.bold)
                     .padding(.leading)
-                
-                Chart(dailyTaskData) { dayData in
+                Chart(dailyTaskData.filter {
+                    $0.date >= Calendar.current.date(byAdding: .day, value: -selectedTimeframe.daysToShow, to: Date())!
+                }) { dayData in
                     BarMark(
                         x: .value("Date", dayData.date),
                         y: .value("Completed Tasks", dayData.completedCount),
-                        width: 40
-                        
+                        width: MarkDimension(floatLiteral: calculateBarWidth())
                     )
-                    .offset(x: 20)
                     .foregroundStyle(Color.green.gradient)
+                    
                 }
                 .frame(height: 300)
                 .padding()
                 .chartXAxis {
-                    AxisMarks(values: .stride(by: .day)) { value in
+                    AxisMarks(values: .stride(by: strideInterval())) { value in
                         AxisGridLine()
                         AxisValueLabel {
-                            // Changed from .day() to .month().day() to show both month and day
                             if let date = value.as(Date.self) {
-                                Text(date, format: .dateTime.month().day())
+                                if shouldShowLabel(for: date) {
+                                    Text(date, format: dateFormat())
+                                }
                             }
                         }
                     }
                 }
-                .chartXScale(domain: Calendar.current.date(byAdding: .day, value: -5, to: Date())!...Date())
+                .chartXScale(domain: Calendar.current.date(byAdding: .day, value: -selectedTimeframe.daysToShow, to: Date())!...Date())
                 .chartYAxis {
                     AxisMarks() {
                         AxisValueLabel()
@@ -86,11 +94,97 @@ struct ProgressGraphView: View {
             .shadow(radius: 2)
             .padding()
             
+            HStack(spacing: 20) {
+                StatisticView(title: "Total", value: totalTasksCompleted)
+                StatisticView(title: "Average", value: String(format: "%.1f", averageTasksPerDay))
+            }
+            .padding()
+            
             Spacer()
         }
         .onAppear {
             loadData()
         }
+    }
+    
+    private func calculateBarWidth() -> CGFloat {
+        switch selectedTimeframe {
+        case .week: return 30
+        case .month: return 12
+        case .quarter: return 6
+        case .year: return 2
+        }
+    }
+    
+    private func strideInterval() -> Calendar.Component {
+        switch selectedTimeframe {
+        case .week: return .day
+        case .month: return .day
+        case .quarter: return .weekOfYear
+        case .year: return .month
+        }
+    }
+    
+    private func dateFormat() -> Date.FormatStyle {
+        switch selectedTimeframe {
+        case .week:
+            return .dateTime.month().day()
+        case .month:
+            return .dateTime.month().day()
+        case .quarter, .year:
+            return .dateTime.month()
+        }
+    }
+    
+    private func shouldShowLabel(for date: Date) -> Bool {
+        let calendar = Calendar.current
+        
+        switch selectedTimeframe {
+        case .week:
+            // Show all days in a week
+            return true
+        case .month:
+            // Show only every 7 days (weekly)
+            return calendar.component(.day, from: date) % 7 == 1
+        case .quarter:
+            // Show only the 1st of each month
+            return calendar.component(.day, from: date) == 1
+        case .year:
+            // Show only every other month
+            return calendar.component(.day, from: date) == 1 &&
+                   calendar.component(.month, from: date) % 2 == 1
+        }
+    }
+    
+    private var dateRangeText: String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        
+        let endDate = Date()
+        let startDate = Calendar.current.date(byAdding: .day, value: -selectedTimeframe.daysToShow, to: endDate)!
+        
+        return "Showing data from \(formatter.string(from: startDate)) to \(formatter.string(from: endDate))"
+    }
+    
+    private var filteredData: [DailyTaskData] {
+        dailyTaskData.filter {
+            $0.date >= Calendar.current.date(byAdding: .day, value: -selectedTimeframe.daysToShow, to: Date())!
+        }
+    }
+    
+    private var totalTasksCompleted: String {
+        let total = filteredData.reduce(0) { $0 + $1.completedCount }
+        return "\(total)"
+    }
+    
+    private var averageTasksPerDay: Double {
+        let total = filteredData.reduce(0) { $0 + $1.completedCount }
+        return filteredData.isEmpty ? 0 : Double(total) / Double(filteredData.count)
+    }
+    
+    private var bestDayCount: Int {
+        filteredData.max(by: { $0.completedCount < $1.completedCount })?.completedCount ?? 0
     }
     
     private func loadData() {
@@ -130,6 +224,28 @@ struct ProgressGraphView: View {
                     .sorted { $0.date < $1.date }
             }
         }
+    }
+}
+
+struct StatisticView: View {
+    let title: String
+    let value: String
+    
+    var body: some View {
+        VStack {
+            Text(title)
+                .font(.caption)
+                .foregroundColor(.secondary)
+            
+            Text(value)
+                .font(.title2)
+                .fontWeight(.bold)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 10)
+        .background(Color(.systemBackground))
+        .cornerRadius(8)
+        .shadow(radius: 1)
     }
 }
 

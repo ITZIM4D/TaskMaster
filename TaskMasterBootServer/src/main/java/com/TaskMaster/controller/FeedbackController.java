@@ -13,12 +13,23 @@ import java.util.List;
 @RequestMapping("/api/feedback")
 public class FeedbackController {
 
+    /**
+     * @Autowired's
+     * 
+     * These inject a bean (instance) created from spring boot into the variables so it then 
+     * instantiates the variables without me needing to
+     * 
+     * very cool very nice
+     * 
+     */
+
     @Autowired
     private FeedbackRepository feedbackRepository;
 
     @Autowired
-    private FeedbackAnalysisService feedbackAnalysisService;
+    private FeedbackAnalysisService feedbackAnalysisService; 
 
+    // Returns a list of all feedbacks from feedback repository object
     @GetMapping
     public List<Feedback> getAllFeedback() {
         return feedbackRepository.findAll();

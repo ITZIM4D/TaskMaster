@@ -1,9 +1,5 @@
-//
-//  FeedbackView.swift
-//  TaskMaster
-//
-//  Created by Jared Wilson on 1/15/25.
-//
+// Tab that allows the user to select finished tasks to make feedback on
+// And allows users to receive feeback
 
 import SwiftUI
 
@@ -82,6 +78,7 @@ struct FeedbackView: View {
         }
     }
     
+    // Loads tasks in from API
     func loadTasks() {
         let url = "http://localhost:8080/api/tasks"
         

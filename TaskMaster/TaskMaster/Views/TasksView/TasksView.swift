@@ -76,6 +76,7 @@ struct TasksView: View {
         
         // Get current date in ISO8601 format
         let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.timeZone = TimeZone(identifier: "America/New_York")
         let currentDate = dateFormatter.string(from: Date())
         
         let jsonBody: [String: Any] = [
@@ -111,7 +112,9 @@ struct TasksView: View {
                     let createdAt = dict["createdAt"] as! String
                     let completedAt = dict["completedAt"] as? String
                     
-                    if (username == appState.currentUsername) {
+//                    if (username == appState.currentUsername) {
+                    let todayString = { let df = DateFormatter(); df.dateFormat = "yyyy-MM-dd"; return df.string(from: Date()) }()
+                    if (username == appState.currentUsername && String(createdAt.prefix(10)) == todayString) {
                         return TaskItem(
                             taskID: taskID,
                             taskName: taskName,
@@ -136,7 +139,7 @@ struct TasksView: View {
 struct TasksView_Previews: PreviewProvider {
     static var previews: some View {
         let previewAppState = AppState.shared
-        previewAppState.currentUsername = "user1813"
+        previewAppState.currentUsername = "user2735"
         
         return TasksView()
             .environmentObject(previewAppState)

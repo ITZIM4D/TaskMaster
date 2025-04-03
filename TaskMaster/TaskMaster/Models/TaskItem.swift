@@ -1,10 +1,4 @@
-//
-//  TaskItem.swift
-//  TaskMaster
-//
-//  Created by Jared Wilson on 1/18/25.
-//
-
+// The model for any task item
 import Foundation
 
 struct TaskItem: Identifiable {
