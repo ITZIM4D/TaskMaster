@@ -62,7 +62,12 @@ struct TasksView: View {
                     }
                 }
                 .onAppear {
-                    loadTasks()
+                    Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
+                        if appState.currentUserID != nil {
+                            timer.invalidate()
+                            loadTasks()
+                        }
+                    }
                 }
                 
                 Spacer()
@@ -93,7 +98,8 @@ struct TasksView: View {
     }
     
     func loadTasks() {
-        let url = "http://localhost:8080/api/tasks"
+        let userID = appState.currentUserID!
+        let url = "http://localhost:8080/api/tasks/user/\(String(userID))"
         
         networkingManager.getRequest(url: url) { jsonResponse in
             guard let response = jsonResponse as? [[String: Any]] else {
@@ -112,9 +118,7 @@ struct TasksView: View {
                     let createdAt = dict["createdAt"] as! String
                     let completedAt = dict["completedAt"] as? String
                     
-//                    if (username == appState.currentUsername) {
-                    let todayString = { let df = DateFormatter(); df.dateFormat = "yyyy-MM-dd"; return df.string(from: Date()) }()
-                    if (username == appState.currentUsername && String(createdAt.prefix(10)) == todayString) {
+                    if (username == appState.currentUsername) {
                         return TaskItem(
                             taskID: taskID,
                             taskName: taskName,
@@ -128,6 +132,9 @@ struct TasksView: View {
                     }
                 }
                 
+                self.tasks.sort { task1, task2 in
+                    return task1.taskID > task2.taskID  // Higher ID first
+                }
             }
         }
     }

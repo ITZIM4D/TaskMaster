@@ -54,6 +54,17 @@ public class TaskController {
             }).orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/user/{userID}")
+    public ResponseEntity<List<Task>> getTasksByUserID(@PathVariable(value = "userID") int userID) {
+        List<Task> tasks = taskRepository.findByUserUserID(userID);
+        
+        if (tasks.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        return ResponseEntity.ok(tasks);
+    }
+
     @PutMapping("/{id}/toggle")
     public ResponseEntity<Task> toggleTaskCompletion(
             @PathVariable(value = "id") int taskID,
