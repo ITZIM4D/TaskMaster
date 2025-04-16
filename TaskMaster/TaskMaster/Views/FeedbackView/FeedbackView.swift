@@ -80,7 +80,8 @@ struct FeedbackView: View {
     
     // Loads tasks in from API
     func loadTasks() {
-        let url = "http://localhost:8080/api/tasks"
+        let userID = appState.currentUserID!
+        let url = "http://localhost:8080/api/tasks/user/\(String(userID))"
         
         networkingManager.getRequest(url: url) { jsonResponse in
             guard let response = jsonResponse as? [[String: Any]] else {
@@ -115,6 +116,9 @@ struct FeedbackView: View {
                     }
                     
                 }
+                self.tasks.sort { task1, task2 in
+                    return task1.taskID > task2.taskID  // Higher ID first
+                }
             }
         }
     }
@@ -135,6 +139,8 @@ struct FeedbackView: View {
                 }
                 return date1 > date2
             }
+            
+            
             
             if let mostRecentFeedback = sortedFeedbacks.first {
                 DispatchQueue.main.async {

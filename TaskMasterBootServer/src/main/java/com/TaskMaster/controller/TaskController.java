@@ -2,6 +2,7 @@ package com.TaskMaster.controller;
 
 import com.TaskMaster.model.Task;
 import com.TaskMaster.repository.TaskRepository;
+import com.TaskMaster.repository.SubtaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.*;
@@ -26,6 +27,9 @@ public class TaskController {
 
     @Autowired
     private TaskRepository taskRepository;
+
+    @Autowired
+    private SubtaskRepository subtaskRepository;
 
     @GetMapping
     public List<Task> getAllTasks() {
@@ -63,6 +67,11 @@ public class TaskController {
         }
         
         return ResponseEntity.ok(tasks);
+    }
+
+    @GetMapping("/{taskId}/subtasks/inprogress")
+    public long getInProgressSubtasksCount(@PathVariable Long taskId) {
+        return subtaskRepository.countInProgressSubtasksByTaskId(taskId);
     }
 
     @PutMapping("/{id}/toggle")

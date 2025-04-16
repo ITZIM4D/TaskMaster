@@ -188,7 +188,8 @@ struct ProgressGraphView: View {
     }
     
     private func loadData() {
-        let url = "http://localhost:8080/api/tasks"
+        let userID = appState.currentUserID!
+        let url = "http://localhost:8080/api/tasks/user/\(String(userID))"
         
         networkingManager.getRequest(url: url) { response in
             DispatchQueue.main.async {

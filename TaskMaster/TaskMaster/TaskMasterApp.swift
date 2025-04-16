@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct TaskMasterApp: App {
     @StateObject private var loginViewModel = LoginViewModel()
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     
     var body: some Scene {
         WindowGroup {

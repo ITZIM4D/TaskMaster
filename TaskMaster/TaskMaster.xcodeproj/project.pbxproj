@@ -36,6 +36,8 @@
 		7F32C8462D2F44A700A64BE8 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F32C8452D2F44A700A64BE8 /* AboutView.swift */; };
 		7F3FB2192C87E50100A6ED0C /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F3FB2182C87E50100A6ED0C /* TabBar.swift */; };
 		7F3FB21B2C8A17AE00A6ED0C /* Header.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F3FB21A2C8A17AE00A6ED0C /* Header.swift */; };
+		7FCE5D582DA9A23D0046AA70 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCE5D572DA9A2380046AA70 /* NotificationManager.swift */; };
+		7FCE5D5A2DAAA7870046AA70 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCE5D592DAAA7740046AA70 /* AppDelegate.swift */; };
 		7FEC6C6C2CE682EE00590D8C /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEC6C6B2CE682EE00590D8C /* LoginView.swift */; };
 		7FEC6C6E2CE6843500590D8C /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEC6C6D2CE6843500590D8C /* LoginViewModel.swift */; };
 		7FEC6C742CE686A300590D8C /* LoginAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FEC6C732CE686A300590D8C /* LoginAction.swift */; };
@@ -94,6 +96,8 @@
 		7F32C8452D2F44A700A64BE8 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		7F3FB2182C87E50100A6ED0C /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
 		7F3FB21A2C8A17AE00A6ED0C /* Header.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Header.swift; sourceTree = "<group>"; };
+		7FCE5D572DA9A2380046AA70 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		7FCE5D592DAAA7740046AA70 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7FEC6C6B2CE682EE00590D8C /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		7FEC6C6D2CE6843500590D8C /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		7FEC6C732CE686A300590D8C /* LoginAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginAction.swift; sourceTree = "<group>"; };
@@ -137,7 +141,6 @@
 				7F2707392C8A292E00AD0F03 /* TasksView */,
 				7F3FB2152C87E4CE00A6ED0C /* Tab Bar */,
 				7F2958572C70DF1B00DB0FA7 /* ContentView.swift */,
-				7F2958552C70DF1B00DB0FA7 /* TaskMasterApp.swift */,
 				7F3FB21A2C8A17AE00A6ED0C /* Header.swift */,
 			);
 			path = Views;
@@ -215,6 +218,8 @@
 		7F2958542C70DF1B00DB0FA7 /* TaskMaster */ = {
 			isa = PBXGroup;
 			children = (
+				7FCE5D592DAAA7740046AA70 /* AppDelegate.swift */,
+				7FCE5D572DA9A2380046AA70 /* NotificationManager.swift */,
 				7F09732F2D3C359B0044DC0E /* Models */,
 				7F2707532CB3540300AD0F03 /* Networking */,
 				7F03D4D02C87E10600352A1A /* Views */,
@@ -222,6 +227,7 @@
 				7F29585B2C70DF1C00DB0FA7 /* TaskMaster.entitlements */,
 				7F29585C2C70DF1C00DB0FA7 /* Preview Content */,
 				7FEC6C772CF6B46900590D8C /* AppState.swift */,
+				7F2958552C70DF1B00DB0FA7 /* TaskMasterApp.swift */,
 			);
 			path = TaskMaster;
 			sourceTree = "<group>";
@@ -432,6 +438,7 @@
 				7F32C8402D2F405E00A64BE8 /* SettingsHeader.swift in Sources */,
 				7F0973332D3C40AD0044DC0E /* FeedbackItem.swift in Sources */,
 				7F27073D2C8A297000AD0F03 /* TasksHeader.swift in Sources */,
+				7FCE5D582DA9A23D0046AA70 /* NotificationManager.swift in Sources */,
 				7FEC6C782CF6B46900590D8C /* AppState.swift in Sources */,
 				7F32C83B2D1098C500A64BE8 /* SubtasksView.swift in Sources */,
 				7F27074C2C8D606300AD0F03 /* AddTaskButton.swift in Sources */,
@@ -441,6 +448,7 @@
 				7F2958582C70DF1B00DB0FA7 /* ContentView.swift in Sources */,
 				7F0973292D38B34C0044DC0E /* FeedbackView.swift in Sources */,
 				7F2707442C8A867500AD0F03 /* ProgressView.swift in Sources */,
+				7FCE5D5A2DAAA7870046AA70 /* AppDelegate.swift in Sources */,
 				7F2707552CB3543900AD0F03 /* NetworkingManager.swift in Sources */,
 				7FEC6C6C2CE682EE00590D8C /* LoginView.swift in Sources */,
 				7F2958562C70DF1B00DB0FA7 /* TaskMasterApp.swift in Sources */,
