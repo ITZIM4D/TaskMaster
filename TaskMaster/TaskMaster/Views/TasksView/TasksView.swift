@@ -28,27 +28,27 @@ struct TasksView: View {
                     .padding(.top, 50)
                 AddTaskButton(refreshTrigger: $refreshTrigger, onRefresh: loadTasks)
                 
-                Text("Notification Tests")
-                    .font(.title)
-                    .padding(.bottom)
-                
-                Button("Test Deadline Notification") {
-                    NotificationManager.shared.sendTestDeadlineNotification()
-                }
-                .buttonStyle(.bordered)
-                .tint(.orange)
-                
-                Button("Test No Progress Notification") {
-                    NotificationManager.shared.sendTestNoProgressNotification()
-                }
-                .buttonStyle(.bordered)
-                .tint(.red)
-                
-                Button("Test Progress Notification") {
-                    NotificationManager.shared.sendTestProgressNotification()
-                }
-                .buttonStyle(.bordered)
-                .tint(.green)
+//                Text("Notification Tests")
+//                    .font(.title)
+//                    .padding(.bottom)
+//                
+//                Button("Test Deadline Notification") {
+//                    NotificationManager.shared.sendTestDeadlineNotification()
+//                }
+//                .buttonStyle(.bordered)
+//                .tint(.orange)
+//                
+//                Button("Test No Progress Notification") {
+//                    NotificationManager.shared.sendTestNoProgressNotification()
+//                }
+//                .buttonStyle(.bordered)
+//                .tint(.red)
+//                
+//                Button("Test Progress Notification") {
+//                    NotificationManager.shared.sendTestProgressNotification()
+//                }
+//                .buttonStyle(.bordered)
+//                .tint(.green)
                 
                 ScrollView {
                     LazyVStack {

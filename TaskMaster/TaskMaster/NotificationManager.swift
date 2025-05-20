@@ -158,7 +158,7 @@ class NotificationManager {
     
     func sendTestDeadlineNotification() {
         let content = UNMutableNotificationContent()
-        content.title = "TEST: Deadline Approaching"
+        content.title = "Deadline Approaching"
         content.body = "Your task 'Complete Project' is due soon!"
         content.sound = .default
         
@@ -183,7 +183,7 @@ class NotificationManager {
     // Test notification for no progress
     func sendTestNoProgressNotification() {
         let content = UNMutableNotificationContent()
-        content.title = "TEST: No Progress Yet"
+        content.title = "No Progress Yet"
         content.body = "You haven't started \"Study For Test\" yet. You can do this!"
         content.sound = .default
         
@@ -208,7 +208,7 @@ class NotificationManager {
     // Test notification for progress made
     func sendTestProgressNotification() {
         let content = UNMutableNotificationContent()
-        content.title = "TEST: Great Progress!"
+        content.title = "Great Progress!"
         content.body = "You're making good progress on 'Research Paper'. Keep it up!"
         content.sound = .default
         
